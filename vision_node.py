@@ -12,15 +12,15 @@ class TraineeVisionNode(Node):
     def __init__(self):
         super().__init__('trainee_vision_node')
 
-        self.create_subscription(CameraInfo, '/camera/camera_info',
-                                  self.calibracao, 10)
+       # self.create_subscription(CameraInfo, '/camera/camera_info',
+        #                          self.calibracao, 10)
           
         self.create_subscription(Image, '/camera/image_raw',
                                    self.imagens, 10)
                                    
         self.publisher = self.create_publisher(Twist, '/cmd_vel', 10)
         
-        self.create_timer(0.05, self.controle)
+       # self.create_timer(0.05, self.controle)
 
         self.k = None
         self.d = None
@@ -41,75 +41,119 @@ class TraineeVisionNode(Node):
     def imagens(self, message):
         
                 frame = self.bridge.imgmsg_to_cv2(message, desired_encoding='bgr8')
+                resultados = self.detectar_formas(frame)
+                for objeto in resultados:
+                    self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}") 
+                    cv2.imshow("Deteccao de formas", frame)
+                    cv2.waitKey(1)
 
-    def medir_base(self, frame, cantos):
+
+    def detectar_formas(self, frame):
             
-            centro = np.mean(cantos, axis = 1)
-            
-            cx, cy = centro[0]
-            
-            canto_1 = cantos[0,0]	
-            canto_2 = cantos[0,1]
-            l = np.linalg.norm (canto_2 - canto_1)
-            
-            x0 = int(np.clip(cx-l, 0, frame.shape[1]))
-            x1 = int(np.clip(cx+l, 0, frame.shape[1]))
-            y0 = int(np.clip(cy-l, 0, frame.shape[0]))
-            y1 = int(np.clip(cy+l, 0, frame.shape[0]))
-                
-            recorte = frame[y0:y1, x0:x1] 
-            if recorte.size == 0:
-                return {}
-            
-            hsv = cv2.cvtColor(recorte, cv2.COLOR_BGR2HSV)
+        
+            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             
             cores = {
                 "verde": ([40, 80, 80], [80, 255, 255]),
-                "azul": ([90, 80, 80], [130, 255, 255]),
-                "vermelho": ([0, 80, 80], [10, 255, 255])}
-            resultados = {}
+                "azul": ([90, 80, 80], [130, 255, 255])}
+            
+            resultados = []
 
-            for nome, (cor_min, cor_max) in cores.items():
+            mascara_vermelho_1 = cv2.inRange(
+            hsv, np.array([0, 80, 80]), np.array([10, 255, 255]))
 
-                cores_min = np.array(cor_min)
-                cores_max = np.array(cor_max)
+            mascara_vermelho_2 = cv2.inRange(hsv, np.array([170, 80, 80]), np.array([179, 255, 255]))
 
-                mascara = cv2.inRange(hsv, cores_min, cores_max)
+            
+            mascaras = {"verde": cv2.inRange(hsv, np.array(cores["verde"][0]),np.array(cores["verde"][1])),
+                        "azul": cv2.inRange(hsv, np.array(cores["azul"][0]),np.array(cores["azul"][1])),
+                        "vermelho": cv2.bitwise_or(mascara_vermelho_1, mascara_vermelho_2)}
 
-                frac_cor = cv2.countNonZero(mascara) / mascara.size
+
+            for nome_cor, mascara in mascaras.items():
 
                 contornos, _ = cv2.findContours(mascara,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
-                circularidade = 0
-
             
-                if contornos:
-                
-                    contorno_max = max(contornos, key=cv2.contourArea)
-                    perimetro = cv2.arcLength(contorno_max, True)
-                    area = cv2.contourArea(contorno_max)
-                    if perimetro != 0:
-                  
-                        circularidade = 4 * np.pi * area / perimetro**2
+                for contorno in contornos:
 
-                resultados[nome] = {"fracao": frac_cor,"circularidade": circularidade}
-            
+                    area = cv2.contourArea(contorno)
+
+            # Ignora pequenas regiões que podem ser ruídos.
+                    if area < 300:
+                        continue
+
+                    perimetro = cv2.arcLength(contorno, True)
+
+                    if perimetro == 0:
+                         continue
+
+                    aproximacao = cv2.approxPolyDP(contorno,0.04 * perimetro,True)
+
+                    vertices = len(aproximacao)
+
+                    if vertices == 3:
+                        forma = "triangulo"
+
+                    elif vertices == 4:
+                        x, y, largura, altura = cv2.boundingRect(aproximacao)
+                        proporcao = largura / float(altura)
+
+                        if 0.90 <= proporcao <= 1.10:
+                            forma = "quadrado"
+                        else:
+                            forma = "retangulo"
+
+                    elif vertices == 5:
+                        forma = "pentagono"
+
+                    elif vertices == 6:
+                        forma = "hexagono"
+
+                    else:
+                        circularidade = (
+                    4 * np.pi * area / (perimetro ** 2))
+
+                        if circularidade > 0.80:
+                             forma = "circulo"
+                        else:
+                             forma = "outra forma"
+
+            # Desenha o contorno e escreve a identificação.
+                    cv2.drawContours(
+                        frame, [aproximacao], -1, (255, 255, 255), 2
+            )
+
+                    x, y, largura, altura = cv2.boundingRect(aproximacao)
+
+                    texto = f"{forma} {nome_cor}"
+
+                    cv2.putText(
+                    frame,
+                texto,
+                (x, y - 10),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.6,
+                (255, 255, 255),
+                2
+            )
+
+                    resultados.append({
+                "cor": nome_cor,
+                "forma": forma,
+                "area": area
+            })
+
             return resultados
-    def alvo_detectado(self, frame, cantos):
-        
-        fracao_verde, redondeza = self.medir_base(frame, cantos)
-        
-        alvo_certo = fracao_verde >= self.limite_verde and redondeza >= self.limite_redondo
-        
-        return alvo_certo
+
+    
 
 def main(args=None):
     rclpy.init(args=args)
     node = None
     try:
         node = TraineeVisionNode()
-        while rclpy.ok() and node.pousou == 0:
-            rclpy.spin_once(node)
+        rclpy.spin(node)
     except KeyboardInterrupt:
         pass
     finally:
