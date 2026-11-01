@@ -1,0 +1,3 @@
+[console_scripts]
+naveg = pkg_projeto.varredura_pf:main
+vision = pkg_projeto.vision_node:main
