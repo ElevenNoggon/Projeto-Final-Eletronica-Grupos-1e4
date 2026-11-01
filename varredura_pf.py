@@ -32,7 +32,7 @@ class Varredura(Node):
         self.etapa_missao = 0
         self.destino_atual = 0
         
-        self.waypoints = [(6.0, -8/3, 10.0),(-6.0, -8/3, 10.0),( -6.0, 0.0, 10.0),(6.0, 0.0, 10.0),(6.0, 8/3, 10.0), (-6.0, 8/3, 10.0), (0.0, 0.0, 10.0)]
+        self.waypoints = [(6.5, -10/3, 5.0),(-6.5, -10/3, 5.0),(-6.5, -2.0, 5.0),(6.5, -2.0, 5.0),(6.5, -2/3, 5.0), (-6.5, -2/3, 5.0),(-6.5, 2/3, 5.0),(6.5, 2/3, 5.0),(6.5, 2.0, 5.0),(-6.5, 2.0, 5.0),(-6.5, 10/3, 5.0), (6.5, 10/3, 5.0), (0.0, 0.0, 5.0)]
         
         #subscriber p ler as posicoes estimadas pelo drone
         self.subscriber = self.create_subscription(msg_type=PoseStamped,
@@ -70,7 +70,7 @@ class Varredura(Node):
         
         #aq ta subindo
         if self.etapa_missao == 0:
-            erro_z = abs (10 - self.z_atual)
+            erro_z = abs (5 - self.z_atual)
             if erro_z < 0.1:
                 self.etapa_missao = 1
                 self.get_logger().info(f"Entrando na etapa de varredura. Tempo = {self.tempo_decorrido():.1f} segundos")
@@ -129,7 +129,7 @@ class Varredura(Node):
             self.get_logger().error("Falha ao armar o drone")
             return False
             
-    def takeoff(self, altitude=10.0):
+    def takeoff(self, altitude=5.0):
         req = CommandTOL.Request()
         req.altitude = altitude
 
@@ -163,7 +163,7 @@ class Varredura(Node):
         else:
             return False
 
-        if self.takeoff(altitude=10.0):
+        if self.takeoff(altitude=5.0):
             return True
         else:
             return False
