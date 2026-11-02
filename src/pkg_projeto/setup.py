@@ -31,7 +31,7 @@ setup(
         'console_scripts': [
             'vision = pkg_projeto.vision_node:main',
             'naveg = pkg_projeto.varredura_pf:main',
-            'sound = pkg_projeto.sound_pf:main'
+            'sound = pkg_projeto.sound:main'
         ],
     },
 )
