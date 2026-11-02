@@ -42,16 +42,79 @@ class TraineeVisionNode(Node):
         
                 frame = self.bridge.imgmsg_to_cv2(message, desired_encoding='bgr8')
                 resultados = self.detectar_formas(frame)
+                hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+                mascara_cinza = cv2.inRange(hsv,np.array([0, 0, 140]),np.array([180, 35, 255]))
+                
                 for objeto in resultados:
                     self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}") 
-                    cv2.imshow("Deteccao de formas", frame)
-                    cv2.waitKey(1)
+                cv2.imshow("Deteccao de formas", frame)
+                cv2.imshow("Mascara cinza", mascara_cinza)
 
+                cv2.waitKey(1)
+
+    def detectar_bases(self, hsv):
+
+    # Detecta as bases cinza-claras
+        mascara_cinza = cv2.inRange(
+        hsv,
+        np.array([0, 0, 140]),
+        np.array([180, 35, 255])
+    )
+
+        kernel = np.ones((3, 3), np.uint8)
+
+        mascara_cinza = cv2.morphologyEx(
+        mascara_cinza,
+        cv2.MORPH_CLOSE,
+        kernel
+    )
+
+        circulos = []
+
+        contornos, _ = cv2.findContours(
+        mascara_cinza,
+        cv2.RETR_EXTERNAL,
+        cv2.CHAIN_APPROX_SIMPLE
+    )
+
+        for contorno in contornos:
+
+            area = cv2.contourArea(contorno)
+
+            if area < 400:
+                continue
+
+            perimetro = cv2.arcLength(contorno, True)
+
+            if perimetro == 0:
+                 continue
+
+            circularidade = 4 * np.pi * area / (perimetro ** 2)
+
+            if circularidade > 0.55:
+
+                (cx, cy), raio = cv2.minEnclosingCircle(contorno)
+
+                if raio < 10:
+                    continue
+
+                circulos.append((int(cx), int(cy), int(raio)))
+
+                self.get_logger().info(
+                f"BASE CINZA ENCONTRADA! "
+                f"Centro: ({int(cx)}, {int(cy)}) | "
+                f"Raio: {int(raio)}"
+            )
+
+        return circulos
 
     def detectar_formas(self, frame):
             
         
             hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+            circulos = self.detectar_bases(hsv)
             
             cores = {
                 "verde": ([40, 80, 80], [80, 255, 255]),
@@ -65,85 +128,73 @@ class TraineeVisionNode(Node):
             mascara_vermelho_2 = cv2.inRange(hsv, np.array([170, 80, 80]), np.array([179, 255, 255]))
 
             
-            mascaras = {"verde": cv2.inRange(hsv, np.array(cores["verde"][0]),np.array(cores["verde"][1])),
-                        "azul": cv2.inRange(hsv, np.array(cores["azul"][0]),np.array(cores["azul"][1])),
-                        "vermelho": cv2.bitwise_or(mascara_vermelho_1, mascara_vermelho_2)}
+  
+
+            for cx, cy ,raio in circulos:
+
+                 cv2.circle(frame,(cx, cy),raio,(0,255,255),2)
+
+                 mascara_roi = np.zeros(hsv.shape[:2], dtype=np.uint8)
+
+                 cv2.circle(mascara_roi,(cx, cy),int(raio * 0.85),255,-1)
+
+                 mascaras = {"verde": cv2.inRange(hsv, np.array(cores["verde"][0]),np.array(cores["verde"][1])),
+                                         "azul": cv2.inRange(hsv, np.array(cores["azul"][0]),np.array(cores["azul"][1])),
+                                         "vermelho": cv2.bitwise_or(mascara_vermelho_1, mascara_vermelho_2)}
+                 
 
 
-            for nome_cor, mascara in mascaras.items():
 
-                contornos, _ = cv2.findContours(mascara,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+                 for nome_cor, mascara in mascaras.items():
+
+                    mascara = cv2.bitwise_and(mascara, mascara_roi)
+
+
+                    contornos, _ = cv2.findContours(mascara,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
             
-                for contorno in contornos:
+                    for contorno in contornos:
 
-                    area = cv2.contourArea(contorno)
+                        area = cv2.contourArea(contorno)
 
-            # Ignora pequenas regiões que podem ser ruídos.
-                    if area < 300:
-                        continue
+                # Ignora pequenas regioes
+                        if area < 300:
+                            continue
 
-                    perimetro = cv2.arcLength(contorno, True)
+                        perimetro = cv2.arcLength(contorno, True)
+                        aproximacao = cv2.approxPolyDP(contorno,0.04 * perimetro,True)
 
-                    if perimetro == 0:
-                         continue
+                        vertices = len(aproximacao)
 
-                    aproximacao = cv2.approxPolyDP(contorno,0.04 * perimetro,True)
+                        forma = None
 
-                    vertices = len(aproximacao)
+                        if vertices == 3:
+                            forma = "triangulo"
 
-                    if vertices == 3:
-                        forma = "triangulo"
+                        elif vertices == 6:
+                            forma = "hexagono"
 
-                    elif vertices == 4:
-                        x, y, largura, altura = cv2.boundingRect(aproximacao)
-                        proporcao = largura / float(altura)
-
-                        if 0.90 <= proporcao <= 1.10:
-                            forma = "quadrado"
                         else:
-                            forma = "retangulo"
-
-                    elif vertices == 5:
-                        forma = "pentagono"
-
-                    elif vertices == 6:
-                        forma = "hexagono"
-
-                    else:
-                        circularidade = (
+                            circularidade = 0
+                            if perimetro > 0:
+                                circularidade = (
                     4 * np.pi * area / (perimetro ** 2))
 
-                        if circularidade > 0.80:
-                             forma = "circulo"
-                        else:
-                             forma = "outra forma"
+                            if circularidade > 0.80:
+                                 forma = "circulo"
+                            
+                        if forma is not None:
+                         # Desenha o contorno e escreve a identificacao
+                            cv2.drawContours(frame, [aproximacao], -1, (255, 255, 255), 2)
 
-            # Desenha o contorno e escreve a identificação.
-                    cv2.drawContours(
-                        frame, [aproximacao], -1, (255, 255, 255), 2
-            )
+                            x, y, largura, altura = cv2.boundingRect(aproximacao)
 
-                    x, y, largura, altura = cv2.boundingRect(aproximacao)
+                            texto = f"{forma} {nome_cor}"
 
-                    texto = f"{forma} {nome_cor}"
+                            cv2.putText(frame, texto, (x, y - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.6,(255, 255, 255), 2)
 
-                    cv2.putText(
-                    frame,
-                texto,
-                (x, y - 10),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.6,
-                (255, 255, 255),
-                2
-            )
-
-                    resultados.append({
-                "cor": nome_cor,
-                "forma": forma,
-                "area": area
-            })
-
+                     
+                            resultados.append({"cor": nome_cor,"forma": forma,"area": area,"circulo": (cx, cy, raio)})
             return resultados
 
     
