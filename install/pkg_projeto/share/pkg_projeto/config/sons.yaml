@@ -1,0 +1,13 @@
+sound:
+  ros__parameters:
+    topico_deteccoes: /avant/deteccoes
+    topico_varredura: /avant/varredura_concluida
+    topico_sequencia: /avant/sequencia_sons
+    audio_dir: ""               # vazio = share/pkg_projeto/audio
+    script_som: ""              # vazio = share/pkg_projeto/scripts/toca_som.sh
+    toca_audio: true
+    min_testes: 5               # detecções iguais para confirmar a cor de uma figura
+    min_proporcao: 0.7          # fração mínima de votos cor confirmada
+    min_testes_relaxado: 2      # usado se a varredura acabar sem as 3 figuras
+    pausa_entre_sons: 0.3       # s
+    republicar_segundos: 10.0   # s repetindo a mensagem final 

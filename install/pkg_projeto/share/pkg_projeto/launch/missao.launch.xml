@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!--
+    Arquivo para iniciar os três nós da missão: visão, sons e varredura.
+    Pré-requisito: simulação, MAVROS e ponte da câmera já em execução.
+
+    Argumentos:
+      iniciar_varredura  false = só visão e sons, sem voar (por padrão: true)
+      toca_audio        false = não reproduz áudio, só publica a sequência (por padrão: true)
+  -->
+  <arg name="iniciar_varredura" default="true"
+       description="Inicia o nó de varredura"/>
+  <arg name="toca_audio" default="true"
+       description="Reproduz os sons e publica a sequência"/>
+
+  <!-- Nó de visão -->
+  <node pkg="pkg_projeto" exec="vision" output="screen"/>
+
+  <!-- Nó de sons (parâmetros em config/sons.yaml) -->
+  <node pkg="pkg_projeto" exec="sound" name="sound" output="screen">
+    <param from="$(find-pkg-share pkg_projeto)/config/sons.yaml"/>
+    <param name="toca_audio" value="$(var toca_audio)"/>
+  </node>
+
+  <!-- Nó de varredura -->
+  <node pkg="pkg_projeto" exec="naveg" output="screen"
+        if="$(var iniciar_varredura)"/>
+</launch>

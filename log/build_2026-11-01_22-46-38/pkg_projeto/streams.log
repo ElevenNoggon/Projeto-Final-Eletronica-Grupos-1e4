@@ -1,0 +1,40 @@
+[1.258s] Invoking command in '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/src/pkg_projeto': PYTHONPATH=/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/pkg_projeto build --build-base /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build install --record /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/install.log --install-scripts $base/lib/pkg_projeto --single-version-externally-managed install_data
+[1.601s] running egg_info
+[1.614s] writing ../../build/pkg_projeto/pkg_projeto.egg-info/PKG-INFO
+[1.615s] writing dependency_links to ../../build/pkg_projeto/pkg_projeto.egg-info/dependency_links.txt
+[1.615s] writing entry points to ../../build/pkg_projeto/pkg_projeto.egg-info/entry_points.txt
+[1.616s] writing requirements to ../../build/pkg_projeto/pkg_projeto.egg-info/requires.txt
+[1.616s] writing top-level names to ../../build/pkg_projeto/pkg_projeto.egg-info/top_level.txt
+[1.653s] reading manifest file '../../build/pkg_projeto/pkg_projeto.egg-info/SOURCES.txt'
+[1.655s] writing manifest file '../../build/pkg_projeto/pkg_projeto.egg-info/SOURCES.txt'
+[1.656s] running build
+[1.656s] running build_py
+[1.656s] copying pkg_projeto/sound.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto
+[1.656s] copying pkg_projeto/memoria.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto
+[1.657s] running install
+[1.662s] running install_lib
+[1.677s] copying /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto/sound.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto
+[1.677s] copying /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto/memoria.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto
+[1.677s] byte-compiling /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto/sound.py to sound.cpython-310.pyc
+[1.680s] byte-compiling /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto/memoria.py to memoria.cpython-310.pyc
+[1.681s] running install_data
+[1.681s] copying package.xml -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto
+[1.681s] creating /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/launch
+[1.682s] copying launch/missao.launch.xml -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/launch
+[1.682s] creating /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/config
+[1.682s] copying config/sons.yaml -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/config
+[1.682s] creating /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/audio
+[1.682s] copying audio/1_circulo.mp3 -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/audio
+[1.682s] copying audio/2_hexagono.mp3 -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/audio
+[1.683s] copying audio/3_triangulo.mp3 -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/audio
+[1.683s] creating /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/scripts
+[1.684s] copying scripts/toca_som.sh -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto/scripts
+[1.684s] running install_egg_info
+[1.704s] removing '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto-0.0.0-py3.10.egg-info' (and everything under it)
+[1.704s] Copying ../../build/pkg_projeto/pkg_projeto.egg-info to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto-0.0.0-py3.10.egg-info
+[1.706s] running install_scripts
+[1.744s] Installing naveg script to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/pkg_projeto
+[1.744s] Installing sound script to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/pkg_projeto
+[1.744s] Installing vision script to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/pkg_projeto
+[1.745s] writing list of installed files to '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/install.log'
+[1.778s] Invoked command in '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/src/pkg_projeto' returned '0': PYTHONPATH=/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/pkg_projeto build --build-base /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build install --record /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/install.log --install-scripts $base/lib/pkg_projeto --single-version-externally-managed install_data
