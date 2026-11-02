@@ -1,0 +1,30 @@
+running egg_info
+writing ../../build/pkg_projeto/pkg_projeto.egg-info/PKG-INFO
+writing dependency_links to ../../build/pkg_projeto/pkg_projeto.egg-info/dependency_links.txt
+writing entry points to ../../build/pkg_projeto/pkg_projeto.egg-info/entry_points.txt
+writing requirements to ../../build/pkg_projeto/pkg_projeto.egg-info/requires.txt
+writing top-level names to ../../build/pkg_projeto/pkg_projeto.egg-info/top_level.txt
+reading manifest file '../../build/pkg_projeto/pkg_projeto.egg-info/SOURCES.txt'
+writing manifest file '../../build/pkg_projeto/pkg_projeto.egg-info/SOURCES.txt'
+running build
+running build_py
+copying pkg_projeto/varredura_pf.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto
+copying pkg_projeto/sound.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto
+copying pkg_projeto/vision_node.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto
+running install
+running install_lib
+copying /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto/varredura_pf.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto
+copying /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto/sound.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto
+copying /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto/vision_node.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto
+byte-compiling /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto/varredura_pf.py to varredura_pf.cpython-310.pyc
+byte-compiling /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto/sound.py to sound.cpython-310.pyc
+byte-compiling /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto/vision_node.py to vision_node.cpython-310.pyc
+running install_data
+running install_egg_info
+removing '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto-0.0.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/pkg_projeto/pkg_projeto.egg-info to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto-0.0.0-py3.10.egg-info
+running install_scripts
+Installing naveg script to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/pkg_projeto
+Installing sound script to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/pkg_projeto
+Installing vision script to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/pkg_projeto
+writing list of installed files to '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/install.log'

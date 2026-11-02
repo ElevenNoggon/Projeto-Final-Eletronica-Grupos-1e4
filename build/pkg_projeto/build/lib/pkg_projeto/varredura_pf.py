@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import Bool 
 from mavros_msgs.srv import CommandBool, SetMode, CommandTOL
 from rclpy.qos import qos_profile_sensor_data
 from geometry_msgs.msg import PoseStamped
@@ -21,6 +22,9 @@ class Varredura(Node):
         self.arming_client = self.create_client(CommandBool, '/mavros/cmd/arming')
         self.takeoff_client = self.create_client(CommandTOL, '/mavros/cmd/takeoff')
         self.land_client = self.create_client(CommandTOL, '/mavros/cmd/land')
+
+        #publisher p mandar a mensagem de que a varredura acabou (p tocar os sons)
+        self.pub_concluida = self.create_publisher(Bool, '/avant/varredura_concluida', 10)
 
         #publisher p mandar as coordenadas futuras pro drone
         self.publisher = self.create_publisher(msg_type=PoseStamped, topic="/mavros/setpoint_position/local", qos_profile=qos_profile_sensor_data,)
@@ -88,6 +92,7 @@ class Varredura(Node):
                 if self.destino_atual>=len(self.waypoints):
                     self.etapa_missao = 2
                     self.get_logger().info(f"Preparando para pousar. Tempo = {self.tempo_decorrido():.1f} segundos")
+                    self.pub_concluida.publish(Bool(data=True)) #publica que a varredura acabou
                     self.land()
                 else:
                     self.publicar_ponto(self.waypoints[self.destino_atual])

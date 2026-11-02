@@ -82,7 +82,7 @@ class SonsNode(Node):
         self._logadas = set()
         self.get_logger().info(
             f'Nó de sons pronto. Áudios em: {self.audio_dir} | '
-            f'script: {self.script_som} (tocar_audio={self.tocar_audio})')
+            f'script: {self.script_som} (toca_audio={self.tocar_audio})')
 
     # ------------------------------------------------------------------ entrada
     def _on_deteccao(self, msg):
@@ -162,7 +162,7 @@ class SonsNode(Node):
         if informado:
             return informado
         try:
-            return os.path.join(get_package_share_directory('pkg_avant'), 'audio')
+            return os.path.join(get_package_share_directory('pkg_projeto'), 'audio')
         except PackageNotFoundError:
             return os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                 '..', 'audio')
@@ -171,7 +171,7 @@ class SonsNode(Node):
         if informado:
             return informado
         try:
-            return os.path.join(get_package_share_directory('pkg_avant'),
+            return os.path.join(get_package_share_directory('pkg_projeto'),
                                 'scripts', 'tocar_som.sh')
         except PackageNotFoundError:
             return os.path.join(os.path.dirname(os.path.abspath(__file__)),

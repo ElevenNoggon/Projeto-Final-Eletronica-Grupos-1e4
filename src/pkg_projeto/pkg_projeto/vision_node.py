@@ -4,7 +4,9 @@ from sensor_msgs.msg import Image
 from sensor_msgs.msg import CameraInfo
 from cv_bridge import CvBridge
 import cv2
+import json
 import numpy as np
+from std_msgs.msg import String
 from geometry_msgs.msg import Twist
 
 class TraineeVisionNode(Node):
@@ -19,6 +21,10 @@ class TraineeVisionNode(Node):
                                    self.imagens, 10)
                                    
         self.publisher = self.create_publisher(Twist, '/cmd_vel', 10)
+        
+        self.pub_deteccoes = self.create_publisher(String, '/avant/deteccoes', 10)
+        self.declare_parameter('mostrar_janela', False)
+        self.mostrar_janela = self.get_parameter('mostrar_janela').value
         
        # self.create_timer(0.05, self.controle)
 
@@ -42,16 +48,32 @@ class TraineeVisionNode(Node):
         
                 frame = self.bridge.imgmsg_to_cv2(message, desired_encoding='bgr8')
                 resultados = self.detectar_formas(frame)
-                hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-
-                mascara_cinza = cv2.inRange(hsv,np.array([0, 0, 140]),np.array([180, 35, 255]))
                 
-                for objeto in resultados:
-                    self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}") 
-                cv2.imshow("Deteccao de formas", frame)
-                cv2.imshow("Mascara cinza", mascara_cinza)
+                #hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+                #mascara_cinza = cv2.inRange(hsv,np.array([0, 0, 140]),np.array([180, 35, 255]))
+                
+                #for objeto in resultados:
+                #    self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}") 
+                #cv2.imshow("Deteccao de formas", frame)
+                #cv2.imshow("Mascara cinza", mascara_cinza)
 
-                cv2.waitKey(1)
+                #cv2.waitKey(1)
+
+                #Detecção por base (a de maior área)
+                melhores = {}
+                for objeto in resultados:
+                    c = objeto['circulo']
+                    if c not in melhores or objeto['area'] > melhores[c]['area']:
+                        melhores[c] = objeto
+
+                for objeto in melhores.values():
+                    msg = String()
+                    msg.data = json.dumps({'forma': objeto['forma'], 'cor': objeto['cor']})
+                    self.pub_deteccoes.publish(msg)
+
+                if self.mostrar_janela:
+                    cv2.imshow("Deteccao de formas", frame)
+                    cv2.waitKey(1)
 
     def detectar_bases(self, hsv):
 
