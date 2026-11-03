@@ -1,0 +1,27 @@
+[0.547s] Invoking command in '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/src/pkg_projeto': PYTHONPATH=/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/pkg_projeto build --build-base /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build install --record /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/install.log --install-scripts $base/lib/pkg_projeto --single-version-externally-managed install_data
+[0.705s] running egg_info
+[0.713s] writing ../../build/pkg_projeto/pkg_projeto.egg-info/PKG-INFO
+[0.714s] writing dependency_links to ../../build/pkg_projeto/pkg_projeto.egg-info/dependency_links.txt
+[0.714s] writing entry points to ../../build/pkg_projeto/pkg_projeto.egg-info/entry_points.txt
+[0.714s] writing requirements to ../../build/pkg_projeto/pkg_projeto.egg-info/requires.txt
+[0.714s] writing top-level names to ../../build/pkg_projeto/pkg_projeto.egg-info/top_level.txt
+[0.733s] reading manifest file '../../build/pkg_projeto/pkg_projeto.egg-info/SOURCES.txt'
+[0.734s] writing manifest file '../../build/pkg_projeto/pkg_projeto.egg-info/SOURCES.txt'
+[0.734s] running build
+[0.734s] running build_py
+[0.734s] copying pkg_projeto/vision_node.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto
+[0.735s] running install
+[0.737s] running install_lib
+[0.745s] copying /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build/lib/pkg_projeto/vision_node.py -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto
+[0.746s] byte-compiling /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto/vision_node.py to vision_node.cpython-310.pyc
+[0.747s] running install_data
+[0.748s] copying package.xml -> /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/share/pkg_projeto
+[0.748s] running install_egg_info
+[0.758s] removing '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto-0.0.0-py3.10.egg-info' (and everything under it)
+[0.758s] Copying ../../build/pkg_projeto/pkg_projeto.egg-info to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages/pkg_projeto-0.0.0-py3.10.egg-info
+[0.759s] running install_scripts
+[0.776s] Installing naveg script to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/pkg_projeto
+[0.776s] Installing sound script to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/pkg_projeto
+[0.776s] Installing vision script to /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/pkg_projeto
+[0.776s] writing list of installed files to '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/install.log'
+[0.796s] Invoked command in '/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/src/pkg_projeto' returned '0': PYTHONPATH=/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/install/pkg_projeto/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/pkg_projeto build --build-base /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/build install --record /home/evelyn/trainee/Projeto-Final-Eletronica-Grupos-1e4/build/pkg_projeto/install.log --install-scripts $base/lib/pkg_projeto --single-version-externally-managed install_data

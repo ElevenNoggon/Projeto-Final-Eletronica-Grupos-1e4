@@ -48,20 +48,15 @@ class TraineeVisionNode(Node):
         
                 frame = self.bridge.imgmsg_to_cv2(message, desired_encoding='bgr8')
                 resultados = self.detectar_formas(frame)
+                hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
                 
-                #hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-                #mascara_cinza = cv2.inRange(hsv,np.array([0, 0, 140]),np.array([180, 35, 255]))
+                mascara_cinza = cv2.inRange(hsv,np.array([0, 0, 140]),np.array([180, 35, 255]))
                 
-                #for objeto in resultados:
-                #    self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}") 
-                #cv2.imshow("Deteccao de formas", frame)
-                #cv2.imshow("Mascara cinza", mascara_cinza)
-
-                #cv2.waitKey(1)
-
                 #Detecção por base (a de maior área)
                 melhores = {}
                 for objeto in resultados:
+                    self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}") 
+
                     c = objeto['circulo']
                     if c not in melhores or objeto['area'] > melhores[c]['area']:
                         melhores[c] = objeto
@@ -73,6 +68,7 @@ class TraineeVisionNode(Node):
 
                 if self.mostrar_janela:
                     cv2.imshow("Deteccao de formas", frame)
+                    cv2.imshow("Mascara cinza", mascara_cinza)
                     cv2.waitKey(1)
 
     def detectar_bases(self, hsv):
