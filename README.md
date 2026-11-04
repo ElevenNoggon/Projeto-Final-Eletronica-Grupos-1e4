@@ -58,6 +58,7 @@ cd ~/simulation/starts
 
 O workspace de ROS 2 que abriga a solução desenvolvida é organizado da seguinte forma:
 
+```bash
 Projeto-Final-Eletronica-Grupos-1e4/
 ├── README.md
 └── src/pkg_projeto/
@@ -68,7 +69,7 @@ Projeto-Final-Eletronica-Grupos-1e4/
     ├── scripts/          toca_som.sh
     ├── pkg_projeto/      varredura_pf.py  vision_node.py  sound.py  memoria.py
     └── test/
-
+```
 
 ## **Dependências**
 
