@@ -19,7 +19,7 @@
   <!-- Nó de sons (parâmetros em config/sons.yaml) -->
   <node pkg="pkg_projeto" exec="sound" name="sound" output="screen">
     <param from="$(find-pkg-share pkg_projeto)/config/sons.yaml"/>
-    <param name="toca_audio" value="$(var toca_audio)"/>
+    <param name="tocar_audio" value="$(var toca_audio)"/>
   </node>
 
   <!-- Nó de varredura -->

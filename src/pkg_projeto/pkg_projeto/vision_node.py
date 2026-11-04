@@ -45,6 +45,7 @@ class TraineeVisionNode(Node):
                 self.d = np.array(message.d)
         
     def imagens(self, message):
+
         
                 frame = self.bridge.imgmsg_to_cv2(message, desired_encoding='bgr8')
                 resultados = self.detectar_formas(frame)
@@ -61,15 +62,36 @@ class TraineeVisionNode(Node):
                     if c not in melhores or objeto['area'] > melhores[c]['area']:
                         melhores[c] = objeto
 
-                for objeto in melhores.values():
-                    msg = String()
-                    msg.data = json.dumps({'forma': objeto['forma'], 'cor': objeto['cor']})
-                    self.pub_deteccoes.publish(msg)
+                frame, resultados = self.ordem_cores(message)
+
+                hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+                mascara_cinza = cv2.inRange(
+                        hsv,
+                        np.array([0, 0, 140]),
+                        np.array([180, 35, 255])
+                    )
+               
+
+                
+                for objeto in resultados:
+                    self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}, | Valor Hexadecimal: {objeto['hex']}") 
+                cv2.imshow("Deteccao de formas", frame)
+                cv2.imshow("Mascara cinza", mascara_cinza)
+ (Atualiza visao e launch do projeto)
+
+                cv2.waitKey(1)
+                
+                
+
 
                 if self.mostrar_janela:
                     cv2.imshow("Deteccao de formas", frame)
                     cv2.imshow("Mascara cinza", mascara_cinza)
                     cv2.waitKey(1)
+
+                
+                
+ (Atualiza visao e launch do projeto)
 
     def detectar_bases(self, hsv):
 
@@ -170,14 +192,18 @@ class TraineeVisionNode(Node):
 
                     contornos, _ = cv2.findContours(mascara,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
-            
+                                
                     for contorno in contornos:
-
                         area = cv2.contourArea(contorno)
-
-                # Ignora pequenas regioes
                         if area < 300:
                             continue
+
+                        mascara_forma = np.zeros(hsv.shape[:2], dtype=np.uint8)
+                        cv2.drawContours(mascara_forma, [contorno], -1, 255, -1)
+                        h, s, v = cv2.mean(hsv, mask=mascara_forma)[:3]
+                        pixel_hsv = np.uint8([[[round(h), round(s), round(v)]]])
+                        r, g, b = [int(x) for x in cv2.cvtColor(pixel_hsv, cv2.COLOR_HSV2RGB)[0][0]]
+                        cor_hex = "{:02X}{:02X}{:02X}".format(r, g, b)
 
                         perimetro = cv2.arcLength(contorno, True)
                         aproximacao = cv2.approxPolyDP(contorno,0.04 * perimetro,True)
@@ -212,9 +238,39 @@ class TraineeVisionNode(Node):
                             cv2.putText(frame, texto, (x, y - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.6,(255, 255, 255), 2)
 
                      
-                            resultados.append({"cor": nome_cor,"forma": forma,"area": area,"circulo": (cx, cy, raio)})
+                            resultados.append({"cor": nome_cor,"forma": forma,"area": area,"circulo": (cx, cy, raio),"hex":cor_hex,"rgb":(r,g,b)})
             return resultados
+            
+          
+          
+    def ordem_cores(self,message):
+        frame = self.bridge.imgmsg_to_cv2(message, desired_encoding='bgr8')
+        resultados = self.detectar_formas(frame)
+        melhores = {}
+        for objeto in resultados:
+            c = objeto['circulo']
+            if c not in melhores or objeto['area'] > melhores[c]['area']:
+                    melhores[c] = objeto
+                #ordena as cores de forma crescente
+            objetos_ordenados = sorted(melhores.values(), key=lambda objeto:objeto['rgb'])
+                
+        cor_def = {}
 
+        for objeto in objetos_ordenados:
+                if objeto['forma']== "circulo":
+                    cor_def[0] = objeto['hex'] 
+                    	
+                elif objeto['forma'] == "triangulo":
+                    cor_def[1] = objeto['hex']
+                        
+                elif objeto['forma'] == "hexagono":
+                        cor_def[2] = objeto['hex']
+                
+                msg = String()
+                msg.data = json.dumps({'forma': objeto['forma'],'cor': objeto['cor'],'hex': objeto['hex']})
+                self.pub_deteccoes.publish(msg)
+
+        return frame,objetos_ordenados
     
 
 def main(args=None):
@@ -234,4 +290,3 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
-                                   
