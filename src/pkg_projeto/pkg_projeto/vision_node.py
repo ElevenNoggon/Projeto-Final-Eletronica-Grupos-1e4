@@ -77,7 +77,6 @@ class TraineeVisionNode(Node):
                     self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}, | Valor Hexadecimal: {objeto['hex']}") 
                 cv2.imshow("Deteccao de formas", frame)
                 cv2.imshow("Mascara cinza", mascara_cinza)
- (Atualiza visao e launch do projeto)
 
                 cv2.waitKey(1)
                 
@@ -91,7 +90,6 @@ class TraineeVisionNode(Node):
 
                 
                 
- (Atualiza visao e launch do projeto)
 
     def detectar_bases(self, hsv):
 
