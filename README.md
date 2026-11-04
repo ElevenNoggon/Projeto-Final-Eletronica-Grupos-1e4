@@ -53,14 +53,49 @@ cd ~/simulation/starts
 ./desafio.sh 
 ```
 
-## **Compilação da solução**
+
+## **Estrutura do repositório/workspace**
+
+O workspace de ROS 2 que abriga a solução desenvolvida é organizado da seguinte forma:
+
+Projeto-Final-Eletronica-Grupos-1e4/
+├── README.md
+└── src/pkg_projeto/
+    ├── package.xml, setup.py, setup.cfg, resource/
+    ├── launch/missao.launch.xml
+    ├── config/sons.yaml
+    ├── audio/            1_circulo.mp3  2_hexagono.mp3  3_triangulo.mp3
+    ├── scripts/          toca_som.sh
+    ├── pkg_projeto/      varredura_pf.py  vision_node.py  sound.py  memoria.py
+    └── test/
+
+
+## **Dependências**
+
+As dependências são instaladas por:
 
 ```bash
-$ 
+sudo apt install ros-humble-mavros ros-humble-cv-bridge ros-humble-ros-gz-bridge \
+                 python3-opencv python3-numpy ffmpeg pulseaudio-utils
 ```
+
+
+## **Compilação da solução**
+
+Para compilar, com o workspace do projeto copiado na pasta "starts" do container (path: ~/simulation/starts), usa-se:
+
+```bash
+cd ~/simulation/starts/Projeto-Final-Eletronica-Grupos-1e4
+colcon build --packages-select pkg_projeto
+source install/setup.bash
+```
+
 
 ## **Execução**
 
+Para executar a solução, evidentemente, é necessário que a simulação já tenha sido iniciada com o comando `./desafio.sh`. Assim, em outro terminal, com o workspace carregado, faz-se:
+
 ```bash
-$ 
+cd ~/simulation/starts/Projeto-Final-Eletronica-Grupos-1e4/src/pkg_projeto/launch
+ros2 launch pkg_avant missao.launch.xml
 ```
