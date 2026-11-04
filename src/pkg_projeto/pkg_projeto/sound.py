@@ -96,7 +96,8 @@ class SonsNode(Node):
         if not isinstance(dado, dict):
             return
         if self.mem.registrar(dado.get('forma'), dado.get('cor'),
-                              dado.get('x'), dado.get('y')):
+                      cor_hex=dado.get('hex'),
+                      x=dado.get('x'), y=dado.get('y')):
             self._atualizar()
 
     def _on_varredura(self, msg):
@@ -129,7 +130,7 @@ class SonsNode(Node):
             if self._iniciado:
                 return
             self._iniciado = True
-        sequencia = Memoria.ordenar(confirmados)
+        sequencia = self.mem.ordenar(confirmados)
         threading.Thread(target=self._executar, args=(sequencia,),
                          daemon=True).start()
 

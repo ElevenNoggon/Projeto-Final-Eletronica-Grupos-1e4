@@ -32,7 +32,6 @@ class TraineeVisionNode(Node):
         self.d = None
         self.bridge = CvBridge()
         self.k_impresso = False
-        self.limite_redondo = 0.84 
 
 
 
@@ -46,47 +45,23 @@ class TraineeVisionNode(Node):
         
     def imagens(self, message):
 
-        
                 frame = self.bridge.imgmsg_to_cv2(message, desired_encoding='bgr8')
-                resultados = self.detectar_formas(frame)
-                hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+                resultados = self.ordem_cores(frame)
                 
-                mascara_cinza = cv2.inRange(hsv,np.array([0, 0, 140]),np.array([180, 35, 255]))
+                
                 
                 #Detecção por base (a de maior área)
-                melhores = {}
                 for objeto in resultados:
                     self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}") 
 
-                    c = objeto['circulo']
-                    if c not in melhores or objeto['area'] > melhores[c]['area']:
-                        melhores[c] = objeto
+                    
 
-                frame, resultados = self.ordem_cores(message)
 
                 hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-                mascara_cinza = cv2.inRange(
-                        hsv,
-                        np.array([0, 0, 140]),
-                        np.array([180, 35, 255])
-                    )
-               
-
-                
-                for objeto in resultados:
-                    self.get_logger().info(f"Forma: {objeto['forma']} | Cor: {objeto['cor']}, | Valor Hexadecimal: {objeto['hex']}") 
+                mascara_cinza = cv2.inRange(hsv, np.array([0, 0, 140]),np.array([180, 35, 255]))
                 cv2.imshow("Deteccao de formas", frame)
                 cv2.imshow("Mascara cinza", mascara_cinza)
-
                 cv2.waitKey(1)
-                
-                
-
-
-                if self.mostrar_janela:
-                    cv2.imshow("Deteccao de formas", frame)
-                    cv2.imshow("Mascara cinza", mascara_cinza)
-                    cv2.waitKey(1)
 
                 
                 
@@ -94,27 +69,15 @@ class TraineeVisionNode(Node):
     def detectar_bases(self, hsv):
 
     # Detecta as bases cinza-claras
-        mascara_cinza = cv2.inRange(
-        hsv,
-        np.array([0, 0, 140]),
-        np.array([180, 35, 255])
-    )
+        mascara_cinza = cv2.inRange(hsv,np.array([0, 0, 140]),np.array([180, 35, 255]))
 
         kernel = np.ones((3, 3), np.uint8)
 
-        mascara_cinza = cv2.morphologyEx(
-        mascara_cinza,
-        cv2.MORPH_CLOSE,
-        kernel
-    )
+        mascara_cinza = cv2.morphologyEx(mascara_cinza,cv2.MORPH_CLOSE,kernel)
 
         circulos = []
 
-        contornos, _ = cv2.findContours(
-        mascara_cinza,
-        cv2.RETR_EXTERNAL,
-        cv2.CHAIN_APPROX_SIMPLE
-    )
+        contornos, _ = cv2.findContours(mascara_cinza,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
         for contorno in contornos:
 
@@ -139,11 +102,7 @@ class TraineeVisionNode(Node):
 
                 circulos.append((int(cx), int(cy), int(raio)))
 
-                self.get_logger().info(
-                f"BASE CINZA ENCONTRADA! "
-                f"Centro: ({int(cx)}, {int(cy)}) | "
-                f"Raio: {int(raio)}"
-            )
+                self.get_logger().info(f"BASE CINZA ENCONTRADA! "f"Centro: ({int(cx)}, {int(cy)}) | "f"Raio: {int(raio)}")
 
         return circulos
 
@@ -241,34 +200,24 @@ class TraineeVisionNode(Node):
             
           
           
-    def ordem_cores(self,message):
-        frame = self.bridge.imgmsg_to_cv2(message, desired_encoding='bgr8')
+    def ordem_cores(self,frame):
         resultados = self.detectar_formas(frame)
         melhores = {}
         for objeto in resultados:
             c = objeto['circulo']
             if c not in melhores or objeto['area'] > melhores[c]['area']:
                     melhores[c] = objeto
-                #ordena as cores de forma crescente
-            objetos_ordenados = sorted(melhores.values(), key=lambda objeto:objeto['rgb'])
+        #ordena as cores de forma crescente
+        objetos_ordenados = sorted(melhores.values(), key=lambda objeto:objeto['rgb'])
                 
-        cor_def = {}
 
         for objeto in objetos_ordenados:
-                if objeto['forma']== "circulo":
-                    cor_def[0] = objeto['hex'] 
-                    	
-                elif objeto['forma'] == "triangulo":
-                    cor_def[1] = objeto['hex']
-                        
-                elif objeto['forma'] == "hexagono":
-                        cor_def[2] = objeto['hex']
                 
                 msg = String()
                 msg.data = json.dumps({'forma': objeto['forma'],'cor': objeto['cor'],'hex': objeto['hex']})
                 self.pub_deteccoes.publish(msg)
 
-        return frame,objetos_ordenados
+        return objetos_ordenados
     
 
 def main(args=None):
