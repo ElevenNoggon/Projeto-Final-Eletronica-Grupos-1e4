@@ -36,7 +36,7 @@ class Varredura(Node):
         self.etapa_missao = 0
         self.destino_atual = 0
         
-        self.waypoints = [(6.5, -10/3, 5.0),(-6.5, -10/3, 5.0),(-6.5, -2.0, 5.0),(6.5, -2.0, 5.0),(6.5, -2/3, 5.0), (-6.5, -2/3, 5.0),(-6.5, 2/3, 5.0),(6.5, 2/3, 5.0),(6.5, 2.0, 5.0),(-6.5, 2.0, 5.0),(-6.5, 10/3, 5.0), (6.5, 10/3, 5.0), (0.0, 0.0, 5.0)]
+        self.waypoints = [(5.4, -1.95, 5.0),(-5.4, -1.95, 5.0),(-5.4, -0.75, 5.0),(5.4, -0.75, 5.0),(5.4, 0.75, 5.0),(-5.4, 0.75, 5.0),(-5.4, 1.95, 5.0),(5.4, 1.95, 5.0),(0.0, 0.0, 5.0)]
         
         #subscriber p ler as posicoes estimadas pelo drone
         self.subscriber = self.create_subscription(msg_type=PoseStamped,
