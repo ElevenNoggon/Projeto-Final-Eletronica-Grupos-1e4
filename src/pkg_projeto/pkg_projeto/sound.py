@@ -131,11 +131,21 @@ class SonsNode(Node):
                 return
             self._iniciado = True
         sequencia = self.mem.ordenar(confirmados)
-        threading.Thread(target=self._executar, args=(sequencia,),
+
+        threading.Thread(target=self._executar, args=(sequencia,confirmados),
                          daemon=True).start()
 
-    def _executar(self, sequencia):
-        self.get_logger().info('Ordem dos sons: ' + ' -> '.join(sequencia))
+    def _executar(self, sequencia, confirmados):
+        detalhes = []
+
+        for forma in sequencia:
+            cor, votos = confirmados[forma]
+            valor = self.mem.valor_hex(forma, cor)
+
+            hexadecimal = f'#{valor:06X}' if valor is not None else 'Indisponivel'
+
+            detalhes.append(f'{forma} ({cor} - {hexadecimal} - {votos} votos)')
+        self.get_logger().info('Ordem dos sons: ' + ' -> '.join(detalhes))
         for forma in sequencia:
             self.get_logger().info(f'Tocando: {forma}')
             if self.tocar_audio and not self._tocar(forma):
